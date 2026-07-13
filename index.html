@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#4f46e5">
+  <title>Homecare Supply Warehouse Inventory</title>
+  <meta name="description" content="Track doors, vanities, and warehouse stock with Stockly Inventory Manager.">
+  <meta property="og:title" content="Stockly Inventory Manager">
+  <meta property="og:description" content="Doors, vanities &amp; stock — organized.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Stockly Inventory Manager">
+  <meta name="twitter:description" content="Doors, vanities &amp; stock — organized.">
+  <meta name="twitter:image" content="/og.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="container header-content">
+      <div>
+        <p class="eyebrow">J-Rick Inventory</p>
+        <h1>Homecare Supply Warehouse Inventory</h1>
+      </div>
+      <div class="header-actions">
+        <button id="themeButton" class="button theme-button" type="button" aria-label="Switch to dark mode" title="Switch color theme">
+          <span id="themeIcon" aria-hidden="true">&#9790;</span>
+          <span id="themeText">Dark mode</span>
+        </button>
+        <button id="addItemButton" class="button button-primary" type="button">+ Add item</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="summary" aria-label="Inventory summary">
+      <div>
+        <p>Total products</p>
+        <strong id="totalProducts">0</strong>
+      </div>
+      <span aria-hidden="true">&#128230;</span>
+    </section>
+
+    <section class="toolbar" aria-label="Inventory tools">
+      <label class="search-field" for="searchInput">
+        <span class="sr-only">Search inventory</span>
+        <span aria-hidden="true">&#128269;</span>
+        <input id="searchInput" type="search" placeholder="Search by name or category..." autocomplete="off">
+      </label>
+      <button id="exportButton" class="button button-secondary export-button" type="button">Export CSV</button>
+      <button id="deleteAllButton" class="button button-danger" type="button">Delete All</button>
+    </section>
+
+    <div class="inventory-columns">
+    <section class="inventory-section" aria-labelledby="inventoryTitle">
+      <div class="section-heading">
+        <div>
+          <h2 id="inventoryTitle">Doors &amp; Other Inventory</h2>
+          <p id="resultsText">0 items</p>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Category</th>
+              <th>Vanity Size</th>
+              <th>Vanity Style</th>
+              <th>Quantity</th>
+              <th class="actions-heading">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="inventoryTableBody"></tbody>
+        </table>
+      </div>
+
+      <div id="emptyState" class="empty-state" hidden>
+        <div aria-hidden="true">&#128230;</div>
+        <h3 id="emptyTitle">Your inventory is empty</h3>
+        <p id="emptyText">Add your first item to get started.</p>
+        <button id="emptyAddButton" class="button button-primary" type="button">Add your first item</button>
+      </div>
+    </section>
+
+    <section class="inventory-section vanity-panel" aria-labelledby="vanityInventoryTitle">
+      <div class="section-heading">
+        <div>
+          <h2 id="vanityInventoryTitle">Vanities</h2>
+          <p id="vanityResultsText">0 items</p>
+        </div>
+      </div>
+      <div class="table-wrap" id="vanityTableWrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Category</th>
+              <th>Vanity Size</th>
+              <th>Vanity Style</th>
+              <th>Quantity</th>
+              <th class="actions-heading">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="vanityTableBody"></tbody>
+        </table>
+      </div>
+      <div id="vanityEmptyState" class="panel-empty">No vanities added yet.</div>
+    </section>
+    </div>
+  </main>
+
+  <dialog id="itemDialog" aria-labelledby="dialogTitle">
+    <form id="itemForm" method="dialog" novalidate>
+      <div class="dialog-header">
+        <div>
+          <p class="eyebrow">Inventory item</p>
+          <h2 id="dialogTitle">Add item</h2>
+        </div>
+        <button id="closeDialogButton" class="icon-button" type="button" aria-label="Close form">&times;</button>
+      </div>
+
+      <input id="itemId" type="hidden">
+
+      <div class="form-row">
+        <div>
+          <label for="quantityInput">Quantity</label>
+          <input id="quantityInput" type="number" min="0" step="1" value="1" inputmode="numeric" required>
+        </div>
+      </div>
+
+      <label for="categoryInput">Category</label>
+      <input id="categoryInput" type="text" maxlength="50" list="categorySuggestions" placeholder="e.g. Electronics" required>
+      <datalist id="categorySuggestions">
+        <option value="Doors"></option>
+        <option value="Vanities"></option>
+        <option value="Frosted Glass"></option>
+        <option value="Electronics"></option>
+        <option value="Office"></option>
+        <option value="Home"></option>
+        <option value="Clothing"></option>
+        <option value="Food"></option>
+        <option value="Other"></option>
+      </datalist>
+
+      <label for="vanityInput">Vanity size</label>
+      <select id="vanityInput">
+        <option value="">Select a vanity size</option>
+        <option value="24&quot;">24&quot;</option>
+        <option value="30&quot;">30&quot;</option>
+        <option value="36&quot;">36&quot;</option>
+        <option value="42&quot;">42&quot;</option>
+        <option value="48&quot;">48&quot;</option>
+        <option value="54&quot;">54&quot;</option>
+        <option value="60&quot;">60&quot;</option>
+        <option value="66&quot;">66&quot;</option>
+        <option value="72&quot;">72&quot;</option>
+      </select>
+
+      <label for="vanityStyleInput">Vanity style</label>
+      <select id="vanityStyleInput">
+        <option value="">Select a vanity style</option>
+        <option value="Solid Wood">Solid Wood</option>
+        <option value="MDF">MDF</option>
+      </select>
+
+      <div class="form-row">
+        <div>
+          <label for="doorSizeInput">Door size</label>
+          <select id="doorSizeInput">
+            <option value="">Select a size</option>
+            <option value="16&quot; x 80&quot;">16&quot; x 80&quot;</option>
+            <option value="18&quot; x 80&quot;">18&quot; x 80&quot;</option>
+            <option value="20&quot; x 80&quot;">20&quot; x 80&quot;</option>
+            <option value="22&quot; x 80&quot;">22&quot; x 80&quot;</option>
+            <option value="24&quot; x 80&quot;">24&quot; x 80&quot;</option>
+            <option value="26&quot; x 80&quot;">26&quot; x 80&quot;</option>
+            <option value="28&quot; x 80&quot;">28&quot; x 80&quot;</option>
+            <option value="30&quot; x 80&quot;">30&quot; x 80&quot;</option>
+            <option value="32&quot; x 80&quot;">32&quot; x 80&quot;</option>
+            <option value="34&quot; x 80&quot;">34&quot; x 80&quot;</option>
+            <option value="36&quot; x 80&quot;">36&quot; x 80&quot;</option>
+            <option value="38&quot; x 80&quot;">38&quot; x 80&quot;</option>
+          </select>
+        </div>
+        <div>
+          <label for="doorStyleInput">Door style</label>
+          <select id="doorStyleInput">
+            <option value="">Select a style</option>
+            <option value="1 Panel Solid Core">1 Panel Solid Core</option>
+            <option value="2 Panel Solid Core">2 Panel Solid Core</option>
+            <option value="3 Panel Solid Core">3 Panel Solid Core</option>
+            <option value="5 Solid Core">5 Solid Core</option>
+            <option value="1 Panel Hollow Core">1 Panel Hollow Core</option>
+            <option value="2 Panel Hollow Core">2 Panel Hollow Core</option>
+            <option value="Frosted Glass">Frosted Glass</option>
+            <option value="1 Panel Frosted Glass">1 Panel Frosted Glass</option>
+            <option value="3 Panel Frosted Glass">3 Panel Frosted Glass</option>
+            <option value="5 Panel Frosted Glass">5 Panel Frosted Glass</option>
+          </select>
+        </div>
+      </div>
+
+      <p id="formError" class="form-error" role="alert" hidden></p>
+
+      <div class="form-actions">
+        <button id="cancelButton" class="button button-secondary" type="button">Cancel</button>
+        <button class="button button-primary" type="submit">Save item</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <script src="script.js"></script>
+</body>
+</html>
